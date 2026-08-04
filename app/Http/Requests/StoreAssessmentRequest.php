@@ -7,7 +7,7 @@ use Illuminate\Validation\Validator;
 
 class StoreAssessmentRequest extends FormRequest
 {
-    use QuestionRules;
+    use BlockQuestionRules;
 
     public function authorize(): bool
     {
@@ -20,20 +20,30 @@ class StoreAssessmentRequest extends FormRequest
     public function rules(): array
     {
         return array_merge([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:5000'],
             'type' => ['required', 'string', 'max:100'],
             'status' => ['required', 'string', 'max:50'],
-            'questions' => ['required', 'array', 'min:1'],
-        ], $this->questionRules('questions.*.'));
+            'scoring_rules' => ['required', 'array'],
+            'scoring_rules.score_unit' => ['required', 'string', 'in:percent'],
+            'scoring_rules.junior_max_score' => ['required', 'integer', 'min:0', 'max:100'],
+            'scoring_rules.senior_min_score' => ['required', 'integer', 'min:0', 'max:100', 'gte:scoring_rules.junior_max_score'],
+            'scoring_rules.hard_gates_enabled' => ['required', 'boolean'],
+            'usage_analytics' => ['required', 'array'],
+            'usage_analytics.times_used' => ['required', 'integer', 'min:0'],
+            'usage_analytics.completion_rate_percent' => ['required', 'integer', 'min:0', 'max:100'],
+            'usage_analytics.average_score_percent' => ['required', 'integer', 'min:0', 'max:100'],
+            'usage_analytics.completed_attempts' => ['required', 'integer', 'min:0', 'lte:usage_analytics.started_attempts'],
+            'usage_analytics.started_attempts' => ['required', 'integer', 'min:0'],
+            'usage_analytics.last_attempted_at' => ['required', 'date'],
+            'blocks' => ['required', 'array', 'min:1'],
+        ], $this->blockRules('blocks.*.'));
     }
 
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            foreach ($this->input('questions', []) as $index => $question) {
-                if (is_array($question)) {
-                    $this->validateCorrectOption($validator, $question, "questions.$index.options");
-                }
-            }
+            $this->validateBlockCorrectOptions($validator, $this->input('blocks', []));
         });
     }
 }

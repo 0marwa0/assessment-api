@@ -20,8 +20,24 @@ class AssessmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => $this->faker->randomElement(['mcq', 'quiz', 'survey']),
+            'title' => $this->faker->sentence(4),
+            'description' => $this->faker->paragraph(),
+            'type' => $this->faker->randomElement(['practice', 'quiz', 'survey']),
             'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
+            'scoring_rules' => [
+                'score_unit' => 'percent',
+                'junior_max_score' => 59,
+                'senior_min_score' => 85,
+                'hard_gates_enabled' => true,
+            ],
+            'usage_analytics' => [
+                'times_used' => 124,
+                'completion_rate_percent' => 92,
+                'average_score_percent' => 78,
+                'completed_attempts' => 113,
+                'started_attempts' => 123,
+                'last_attempted_at' => '2026-08-04T10:30:00Z',
+            ],
         ];
     }
 }

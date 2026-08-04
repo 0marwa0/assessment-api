@@ -15,7 +15,7 @@ trait QuestionRules
 
         return [
             $prefix.'question_text' => [$presence, 'string', 'max:5000'],
-            $prefix.'question_type' => ['sometimes', 'string', 'max:50'],
+            $prefix.'type' => [$presence, 'string', 'max:50'],
             $prefix.'options' => [$presence, 'array', 'min:2', 'max:26'],
             $prefix.'options.*.label' => ['required_with:'.$prefix.'options', 'string', 'max:5', 'distinct:ignore_case'],
             $prefix.'options.*.text' => ['required_with:'.$prefix.'options', 'string', 'max:1000'],

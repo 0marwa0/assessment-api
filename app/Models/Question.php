@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'assessment_id',
+    'block_id',
     'question_text',
-    'question_type',
+    'type',
     'options',
     'difficulty_level',
     'reward',
@@ -30,6 +31,14 @@ class Question extends Model
     public function assessment(): BelongsTo
     {
         return $this->belongsTo(Assessment::class);
+    }
+
+    /**
+     * @return BelongsTo<Block, $this>
+     */
+    public function block(): BelongsTo
+    {
+        return $this->belongsTo(Block::class);
     }
 
     /**

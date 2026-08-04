@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Assessment;
+use App\Models\Block;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,8 +23,9 @@ class QuestionFactory extends Factory
     {
         return [
             'assessment_id' => Assessment::factory(),
+            'block_id' => Block::factory(),
             'question_text' => $this->faker->sentence(),
-            'question_type' => 'mcq',
+            'type' => 'mcq',
             'options' => [
                 ['label' => 'A', 'text' => $this->faker->words(3, true), 'is_correct' => true],
                 ['label' => 'B', 'text' => $this->faker->words(3, true), 'is_correct' => false],

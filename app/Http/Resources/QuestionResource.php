@@ -17,8 +17,9 @@ class QuestionResource extends JsonResource
         return [
             'id' => $this->id,
             'assessment_id' => $this->assessment_id,
+            'block_id' => $this->block_id,
             'question_text' => $this->question_text,
-            'question_type' => $this->question_type,
+            'type' => $this->type,
             'options' => $this->options,
             'difficulty_level' => $this->difficulty_level,
             'reward' => $this->reward,

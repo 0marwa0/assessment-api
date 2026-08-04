@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assessment_id')->constrained()->cascadeOnDelete();
             $table->text('question_text');
-            $table->string('question_type', 50)->default('mcq');
+            $table->string('type', 50);
             $table->json('options');
             $table->string('difficulty_level', 50);
             $table->unsignedInteger('reward')->default(0);

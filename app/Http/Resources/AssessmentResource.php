@@ -16,9 +16,13 @@ class AssessmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
             'type' => $this->type,
             'status' => $this->status,
-            'questions' => QuestionResource::collection($this->whenLoaded('questions')),
+            'scoring_rules' => $this->scoring_rules,
+            'usage_analytics' => $this->usage_analytics,
+            'blocks' => BlockResource::collection($this->whenLoaded('blocks')),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

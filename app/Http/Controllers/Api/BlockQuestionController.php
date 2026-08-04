@@ -7,24 +7,25 @@ use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Assessment;
+use App\Models\Block;
 use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class AssessmentQuestionController extends Controller
+class BlockQuestionController extends Controller
 {
-    public function index(Assessment $assessment): AnonymousResourceCollection
+    public function index(Assessment $assessment, Block $block): AnonymousResourceCollection
     {
-        return QuestionResource::collection($assessment->questions()->get());
+        return QuestionResource::collection($block->questions()->get());
     }
 
-    public function store(StoreQuestionRequest $request, Assessment $assessment): QuestionResource
+    public function store(StoreQuestionRequest $request, Assessment $assessment, Block $block): QuestionResource
     {
-        $question = $assessment->questions()->create(array_merge(
+        $question = $block->questions()->create(array_merge(
             $request->safe()->except('position'),
             [
-                'question_type' => $request->validated('question_type', 'mcq'),
-                'position' => $request->validated('position', $assessment->questions()->count()),
+                'assessment_id' => $assessment->id,
+                'position' => $request->validated('position', $block->questions()->count()),
             ],
         ));
 
@@ -32,12 +33,12 @@ class AssessmentQuestionController extends Controller
             ->additional(['message' => 'Question created successfully.']);
     }
 
-    public function show(Assessment $assessment, Question $question): QuestionResource
+    public function show(Assessment $assessment, Block $block, Question $question): QuestionResource
     {
         return new QuestionResource($question);
     }
 
-    public function update(UpdateQuestionRequest $request, Assessment $assessment, Question $question): QuestionResource
+    public function update(UpdateQuestionRequest $request, Assessment $assessment, Block $block, Question $question): QuestionResource
     {
         $question->fill($request->validated());
         $question->save();
@@ -46,7 +47,7 @@ class AssessmentQuestionController extends Controller
             ->additional(['message' => 'Question updated successfully.']);
     }
 
-    public function destroy(Assessment $assessment, Question $question): JsonResponse
+    public function destroy(Assessment $assessment, Block $block, Question $question): JsonResponse
     {
         $question->delete();
 

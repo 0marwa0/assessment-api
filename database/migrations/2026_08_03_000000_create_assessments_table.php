@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('assessments', function (Blueprint $table): void {
             $table->id();
+            $table->string('title');
+            $table->text('description');
             $table->string('type', 100);
             $table->string('status', 50);
+            $table->json('scoring_rules');
+            $table->json('usage_analytics');
             $table->timestamps();
 
             $table->index(['type', 'status']);

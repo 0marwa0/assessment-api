@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AssessmentBlockController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\BlockQuestionController;
+use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\SimulationController;
 use App\Http\Controllers\Api\SimulationTestSessionController;
 use App\Http\Controllers\Api\SimulationTestSessionMessageController;
@@ -18,3 +19,5 @@ Route::apiResource('assessments.blocks.questions', BlockQuestionController::clas
 Route::apiResource('simulations', SimulationController::class);
 Route::post('simulations/{simulation}/test-sessions', [SimulationTestSessionController::class, 'store']);
 Route::post('simulation-test-sessions/{session}/messages', [SimulationTestSessionMessageController::class, 'store']);
+
+Route::apiResource('materials', MaterialController::class);

@@ -85,4 +85,30 @@ class AuthApiTest extends TestCase
     {
         $this->getJson('/api/me')->assertUnauthorized();
     }
+
+    public function test_login_is_rate_limited_after_ten_attempts_per_minute(): void
+    {
+        User::factory()->create(['email' => 'ahmed@example.com', 'password' => 'password123']);
+
+        for ($i = 0; $i < 10; $i++) {
+            $this->postJson('/api/login', ['email' => 'ahmed@example.com', 'password' => 'wrong-pass'])
+                ->assertStatus(422);
+        }
+
+        $this->postJson('/api/login', ['email' => 'ahmed@example.com', 'password' => 'wrong-pass'])
+            ->assertStatus(429);
+    }
+
+    public function test_the_login_limit_is_per_email_so_other_users_can_still_log_in(): void
+    {
+        User::factory()->create(['email' => 'ahmed@example.com', 'password' => 'password123']);
+        User::factory()->create(['email' => 'sara@example.com', 'password' => 'password123']);
+
+        for ($i = 0; $i < 11; $i++) {
+            $this->postJson('/api/login', ['email' => 'ahmed@example.com', 'password' => 'wrong-pass']);
+        }
+
+        $this->postJson('/api/login', ['email' => 'sara@example.com', 'password' => 'password123'])
+            ->assertOk();
+    }
 }

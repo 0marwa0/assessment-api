@@ -32,10 +32,13 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WrittenAnswerController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-// R11: forgot / reset password. Throttled per IP to blunt email probing.
-Route::middleware('throttle:6,1')->group(function (): void {
+// Throttled per email (see AppServiceProvider) to slow password guessing.
+Route::middleware('throttle:auth')->group(function (): void {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+});
+// R11: forgot / reset password. Throttled per email to blunt email probing.
+Route::middleware('throttle:password-email')->group(function (): void {
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
 });

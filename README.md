@@ -29,6 +29,52 @@ In addition, [Laracasts](https://laracasts.com) contains thousands of video tuto
 
 You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
 
+## Running the App
+
+Requirements: PHP 8.3+, Composer, Node.js (for Vite).
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
+
+Start the app (server, queue listener, log tailer, and Vite dev server together):
+
+```bash
+composer run dev
+```
+
+Or just the API server on its own:
+
+```bash
+php artisan serve
+```
+
+The API will be available at `http://127.0.0.1:8000/api`.
+
+Run the test suite with:
+
+```bash
+php artisan test
+```
+
+## Authentication & Roles
+
+Auth is token-based (Laravel Sanctum). Roles are managed with [spatie/laravel-permission](https://spatie.be/docs/laravel-permission) — `php artisan migrate` seeds the two roles automatically: `end_user` (studies and takes assessments) and `manager` (oversees end users).
+
+- `POST /api/register` — public, always creates an `end_user` account (any `role` sent in the body is ignored).
+- `POST /api/login` — returns a bearer token.
+- `POST /api/logout`, `GET /api/me` — require `Authorization: Bearer <token>`.
+- `GET /api/users`, `GET /api/users/{user}`, `POST /api/users`, `PATCH /api/users/{user}/role` — manager-only (`role:manager` middleware, via Spatie).
+
+There's no public way to create the first manager — self-registration can never produce one. Promote a user manually:
+
+```bash
+php artisan tinker --execute="App\Models\User::where('email', 'you@example.com')->first()->syncRoles(['manager']);"
+```
+
 ## Agentic Development
 
 Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:

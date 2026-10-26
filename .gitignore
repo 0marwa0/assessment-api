@@ -25,3 +25,8 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# secrets — never commit
+.env.backup*
+*accessKeys*.csv
+*.pem

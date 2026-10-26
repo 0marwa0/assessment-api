@@ -26,6 +26,7 @@ class UpdateQuestionRequest extends FormRequest
     {
         $validator->after(function (Validator $validator): void {
             $this->validateCorrectOption($validator, $this->all(), 'options');
+            $this->validateDistinctOptionLabels($validator, $this->all(), 'options');
         });
     }
 }

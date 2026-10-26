@@ -3,12 +3,22 @@
 namespace Tests\Feature;
 
 use App\Models\Material;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MaterialApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    // Content routes need a login since R1b, and changes are manager-only.
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $token = User::factory()->manager()->create()->createToken('api')->plainTextToken;
+        $this->withHeader('Authorization', "Bearer {$token}");
+    }
 
     public function test_material_can_be_created_and_defaults_to_draft(): void
     {

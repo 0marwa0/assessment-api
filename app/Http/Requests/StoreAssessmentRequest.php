@@ -29,6 +29,21 @@ class StoreAssessmentRequest extends FormRequest
             'scoring_rules.junior_max_score' => ['required', 'integer', 'min:0', 'max:100'],
             'scoring_rules.senior_min_score' => ['required', 'integer', 'min:0', 'max:100', 'gte:scoring_rules.junior_max_score'],
             'scoring_rules.hard_gates_enabled' => ['required', 'boolean'],
+            // Added in R1; optional so older payloads still save (defaults: 70% / 15 min).
+            'scoring_rules.pass_pct' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            // 0 = no time limit.
+            'scoring_rules.time_limit_minutes' => ['sometimes', 'integer', 'min:0', 'max:240'],
+            // MG3 (all optional; defaults live in AssessmentGrader::rules / the front end).
+            'scoring_rules.block_gates' => ['sometimes', 'nullable', 'array'],
+            'scoring_rules.block_gates.*' => ['integer', 'min:0', 'max:100'],
+            'scoring_rules.pass_bonus_xp' => ['sometimes', 'integer', 'min:0', 'max:10000'],
+            'scoring_rules.warn_last_minute' => ['sometimes', 'boolean'],
+            'scoring_rules.shuffle_questions' => ['sometimes', 'boolean'],
+            'scoring_rules.shuffle_answers' => ['sometimes', 'boolean'],
+            'scoring_rules.allow_mark_for_review' => ['sometimes', 'boolean'],
+            'scoring_rules.results_visibility' => ['sometimes', 'string', 'in:full,answers,score'],
+            'scoring_rules.default_max_attempts' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:20'],
+            'scoring_rules.certificate_enabled' => ['sometimes', 'boolean'],
             'usage_analytics' => ['required', 'array'],
             'usage_analytics.times_used' => ['required', 'integer', 'min:0'],
             'usage_analytics.completion_rate_percent' => ['required', 'integer', 'min:0', 'max:100'],

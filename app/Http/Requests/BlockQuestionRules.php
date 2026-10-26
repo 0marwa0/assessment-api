@@ -19,6 +19,9 @@ trait BlockQuestionRules
         return array_merge([
             $prefix.'title' => [$presence, 'string', 'max:255'],
             $prefix.'position' => ['sometimes', 'integer', 'min:0'],
+            $prefix.'enabled' => ['sometimes', 'boolean'],
+            // R6 pools: show this many random questions from the block (null = all).
+            $prefix.'pool_size' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:500'],
             $prefix.'questions' => [$questionsPresence, 'array', 'min:1'],
         ], $this->questionRules($prefix.'questions.*.'));
     }
@@ -32,7 +35,9 @@ trait BlockQuestionRules
 
             foreach ($block['questions'] ?? [] as $questionIndex => $question) {
                 if (is_array($question)) {
-                    $this->validateCorrectOption($validator, $question, "$field.$blockIndex.questions.$questionIndex.options");
+                    $optionsField = "$field.$blockIndex.questions.$questionIndex.options";
+                    $this->validateCorrectOption($validator, $question, $optionsField);
+                    $this->validateDistinctOptionLabels($validator, $question, $optionsField);
                 }
             }
         }

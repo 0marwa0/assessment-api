@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateAssessmentRequest;
 use App\Http\Resources\AssessmentResource;
 use App\Models\Assessment;
 use App\Models\Block;
+use App\Models\RoadmapNode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -68,6 +69,8 @@ class AssessmentController extends Controller
                 $copiedBlock = $copy->blocks()->create([
                     'title' => $block->title,
                     'position' => $block->position,
+                    'enabled' => $block->enabled,
+                    'pool_size' => $block->pool_size,
                 ]);
 
                 foreach ($block->questions as $question) {
@@ -76,6 +79,7 @@ class AssessmentController extends Controller
                         'question_text' => $question->question_text,
                         'type' => $question->type,
                         'options' => $question->options,
+                        'settings' => $question->settings,
                         'difficulty_level' => $question->difficulty_level,
                         'reward' => $question->reward,
                         'required_to_pass_block' => $question->required_to_pass_block,
@@ -112,6 +116,11 @@ class AssessmentController extends Controller
 
     public function destroy(Assessment $assessment): JsonResponse
     {
+        // Roadmap steps reference assessments with restrictOnDelete; say so
+        // plainly instead of failing on the foreign key (MG3 delete pop-up).
+        $roadmaps = RoadmapNode::query()->where('assessment_id', $assessment->id)->distinct()->count('roadmap_id');
+        abort_if($roadmaps > 0, 422, "It's used in {$roadmaps} roadmap".($roadmaps === 1 ? '' : 's').'. Remove it from there first.');
+
         $assessment->delete();
 
         return response()->json(status: 204);
@@ -126,6 +135,8 @@ class AssessmentController extends Controller
             $assessmentBlock = $assessment->blocks()->create([
                 'title' => $block['title'],
                 'position' => $block['position'] ?? $index,
+                'enabled' => $block['enabled'] ?? true,
+                'pool_size' => $block['pool_size'] ?? null,
             ]);
 
             $this->syncQuestions($assessment, $assessmentBlock, $block['questions']);

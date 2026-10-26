@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('category', 100);
             $table->json('tags');
             $table->string('status', 50)->default('draft');
-            $table->string('difficulty_level', 50);
-            $table->string('estimated_time', 50);
-            $table->unsignedInteger('xp')->default(0);
+            $table->string('difficulty_level', 50)->nullable();
+            $table->string('estimated_time', 50)->nullable();
+            $table->unsignedInteger('xp')->nullable();
             $table->json('stages');
             $table->string('created_by')->nullable();
             $table->timestamps();

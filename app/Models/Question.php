@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'question_text',
     'type',
     'options',
+    'settings',
     'difficulty_level',
     'reward',
     'required_to_pass_block',
@@ -50,6 +51,7 @@ class Question extends Model
     {
         return [
             'options' => 'array',
+            'settings' => 'array',
             'reward' => 'integer',
             'required_to_pass_block' => 'boolean',
         ];

@@ -24,8 +24,11 @@ class SimulationFactory extends Factory
             'description' => $this->faker->paragraph(),
             'level' => $this->faker->randomElement(['Beginner', 'Intermediate', 'Advanced']),
             'time_required' => $this->faker->randomElement(['8-10 min', '12-18 min', '20-25 min']),
-            'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
+            'status' => 'published', // tests that need a draft set it explicitly
             'opening_message' => $this->faker->sentence(),
+            'persona' => $this->faker->paragraph(),
+            'scenario_brief' => $this->faker->paragraph(),
+            'language' => $this->faker->randomElement(['en', 'ar']),
         ];
     }
 }

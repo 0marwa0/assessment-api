@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // R12: links in notification emails point at the Next.js app.
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

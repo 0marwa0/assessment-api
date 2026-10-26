@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('time_required', 50);
             $table->string('status', 50);
             $table->text('opening_message');
+            $table->text('persona');
+            $table->text('scenario_brief');
+            $table->string('language')->default('en');
             $table->timestamps();
 
             $table->index('status');

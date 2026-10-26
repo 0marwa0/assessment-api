@@ -19,6 +19,9 @@ class BlockResource extends JsonResource
             'assessment_id' => $this->assessment_id,
             'title' => $this->title,
             'position' => $this->position,
+            'enabled' => (bool) ($this->enabled ?? true),
+            // R6: show this many random questions per attempt (null = all).
+            'pool_size' => $this->pool_size,
             'questions' => QuestionResource::collection($this->whenLoaded('questions')),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),

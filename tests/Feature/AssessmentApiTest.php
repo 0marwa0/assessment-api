@@ -3,12 +3,22 @@
 namespace Tests\Feature;
 
 use App\Models\Assessment;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AssessmentApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    // Editing assessments is manager-only since R1; these tests cover the editor.
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $token = User::factory()->manager()->create()->createToken('api')->plainTextToken;
+        $this->withHeader('Authorization', "Bearer {$token}");
+    }
 
     public function test_assessment_can_be_created_with_ui_question_fields(): void
     {

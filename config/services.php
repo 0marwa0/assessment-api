@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-sonnet-5'),
+    ],
+
+    'bedrock' => [
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+        'model_id' => env('BEDROCK_MODEL_ID'),
+    ],
+
 ];

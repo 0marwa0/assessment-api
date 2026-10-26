@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('position')->default(0);
             $table->timestamps();
 
-            $table->index(['simulation_test_session_id', 'position']);
+            $table->index(['simulation_test_session_id', 'position'], 'sim_test_messages_session_position_index');
         });
     }
 

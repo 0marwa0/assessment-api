@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['assessment_id', 'title', 'position'])]
+#[Fillable(['assessment_id', 'title', 'position', 'enabled', 'pool_size'])]
 class Block extends Model
 {
     /** @use HasFactory<BlockFactory> */
@@ -29,5 +29,16 @@ class Block extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class)->orderBy('position');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'enabled' => 'boolean',
+            'pool_size' => 'integer',
+        ];
     }
 }
